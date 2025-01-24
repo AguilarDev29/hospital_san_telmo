@@ -20,3 +20,14 @@ C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\obj\Debug\Fin
 C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\obj\Debug\Final-TallerdeProgramacion-Aguilar-Juarez.pdb
 C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\obj\Debug\Final_TallerdeProgramacion_Aguilar_Juarez.IngresoPaciente.resources
 C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\obj\Debug\Final_TallerdeProgramacion_Aguilar_Juarez.Login.resources
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\BCrypt.Net-Next.dll
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Buffers.dll
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Memory.dll
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\BCrypt.Net-Next.xml
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Buffers.xml
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Memory.xml
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\PC\source\repos\Final-TallerdeProgramacion-Aguilar-Juarez\obj\Debug\Final-Ta.5DE6476F.Up2Date

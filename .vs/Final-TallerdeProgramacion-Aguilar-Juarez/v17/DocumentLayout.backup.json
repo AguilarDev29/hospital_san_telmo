@@ -3,24 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|c:\\users\\pc\\source\\repos\\final-tallerdeprogramacion-aguilar-juarez\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\ingresopaciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:vista\\ingresopaciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|c:\\users\\pc\\source\\repos\\final-tallerdeprogramacion-aguilar-juarez\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|c:\\users\\pc\\source\\repos\\final-tallerdeprogramacion-aguilar-juarez\\vista\\ingresopaciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:vista\\ingresopaciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|c:\\users\\pc\\source\\repos\\final-tallerdeprogramacion-aguilar-juarez\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|c:\\users\\pc\\source\\repos\\final-tallerdeprogramacion-aguilar-juarez\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\modelo\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:modelo\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|c:\\users\\pc\\source\\repos\\final-tallerdeprogramacion-aguilar-juarez\\ingresopaciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:ingresopaciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\controlador\\logincontrolador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:controlador\\logincontrolador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:vista\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:vista\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\modelo\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{374B4398-7D65-40B1-8575-8A28FD5007E5}|Final-TallerdeProgramacion-Aguilar-Juarez.csproj|solutionrelative:modelo\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,33 +42,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Conexion.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Conexion.cs",
-              "RelativeDocumentMoniker": "Conexion.cs",
-              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Conexion.cs",
-              "RelativeToolTip": "Conexion.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAqwAwAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T05:37:23.709Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Login.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Login.cs",
-              "RelativeDocumentMoniker": "Login.cs",
-              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Login.cs",
-              "RelativeToolTip": "Login.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAlwBoAAAAgAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "Conexion.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\modelo\\Conexion.cs",
+              "RelativeDocumentMoniker": "modelo\\Conexion.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\modelo\\Conexion.cs",
+              "RelativeToolTip": "modelo\\Conexion.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T05:30:25.726Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-22T23:15:16.607Z"
             },
             {
               "$type": "Document",
@@ -66,37 +68,85 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T05:21:41.605Z",
+              "WhenOpened": "2025-01-22T23:32:59.528Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Login.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Login.cs",
-              "RelativeDocumentMoniker": "Login.cs",
-              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\Login.cs [Dise\u00F1o]",
-              "RelativeToolTip": "Login.cs [Dise\u00F1o]",
+              "DocumentIndex": 3,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\modelo\\Usuario.cs",
+              "RelativeDocumentMoniker": "modelo\\Usuario.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\modelo\\Usuario.cs",
+              "RelativeToolTip": "modelo\\Usuario.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAowCAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-12T23:50:02.022Z",
-              "EditorCaption": " [Dise\u00F1o]"
+              "WhenOpened": "2025-01-22T23:30:54.251Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IngresoPaciente.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\IngresoPaciente.cs",
-              "RelativeDocumentMoniker": "IngresoPaciente.cs",
-              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\IngresoPaciente.cs [Dise\u00F1o]",
-              "RelativeToolTip": "IngresoPaciente.cs [Dise\u00F1o]",
+              "Title": "LoginControlador.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\controlador\\LoginControlador.cs",
+              "RelativeDocumentMoniker": "controlador\\LoginControlador.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\controlador\\LoginControlador.cs",
+              "RelativeToolTip": "controlador\\LoginControlador.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-12T21:36:10.291Z",
+              "WhenOpened": "2025-01-22T23:25:08.957Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IngresoPaciente.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\IngresoPaciente.cs",
+              "RelativeDocumentMoniker": "vista\\IngresoPaciente.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\IngresoPaciente.cs*",
+              "RelativeToolTip": "vista\\IngresoPaciente.cs*",
+              "ViewState": "AgIAACIAAAAAAAAAAAAjwDIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-22T23:10:44.861Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IngresoPaciente.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\IngresoPaciente.cs",
+              "RelativeDocumentMoniker": "vista\\IngresoPaciente.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\IngresoPaciente.cs [Dise\u00F1o]*",
+              "RelativeToolTip": "vista\\IngresoPaciente.cs [Dise\u00F1o]*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-22T23:10:41.811Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Login.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\Login.cs",
+              "RelativeDocumentMoniker": "vista\\Login.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\Login.cs",
+              "RelativeToolTip": "vista\\Login.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABsAAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-22T23:10:27.683Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Login.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\Login.cs",
+              "RelativeDocumentMoniker": "vista\\Login.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\Final-TallerdeProgramacion-Aguilar-Juarez\\vista\\Login.cs [Dise\u00F1o]",
+              "RelativeToolTip": "vista\\Login.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-22T23:10:09.978Z",
               "EditorCaption": " [Dise\u00F1o]"
             }
           ]
