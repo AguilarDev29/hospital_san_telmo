@@ -63,6 +63,56 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Dark_Green_and_Cream_Simple_Dark_Real_Estate_Bio_Link_Website {
+            get {
+                object obj = ResourceManager.GetObject("Dark Green and Cream Simple Dark Real Estate Bio-Link Website", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dark_Green_and_Cream_Simple_Dark_Real_Estate_Bio_Link_Website__1_ {
+            get {
+                object obj = ResourceManager.GetObject("Dark Green and Cream Simple Dark Real Estate Bio-Link Website (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dark_Green_and_Cream_Simple_Dark_Real_Estate_Bio_Link_Website__2_ {
+            get {
+                object obj = ResourceManager.GetObject("Dark Green and Cream Simple Dark Real Estate Bio-Link Website (2)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dark_Green_and_Cream_Simple_Dark_Real_Estate_Bio_Link_Website__3_ {
+            get {
+                object obj = ResourceManager.GetObject("Dark Green and Cream Simple Dark Real Estate Bio-Link Website (3)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dark_Green_and_Cream_Simple_Dark_Real_Estate_Bio_Link_Website__4_ {
+            get {
+                object obj = ResourceManager.GetObject("Dark Green and Cream Simple Dark Real Estate Bio-Link Website (4)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Minimalist_Hospital_and_Medical_Health_Logo {
             get {
                 object obj = ResourceManager.GetObject("Minimalist Hospital and Medical Health Logo", resourceCulture);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
@@ -13,14 +14,20 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
 
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
-            if(txtDni.Text == "")
-            { MessageBox.Show("Ingrese un DNI", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              return; 
+            if (txtDni.Text == "")
+            {
+                MessageBox.Show("Ingrese un DNI", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-
-            if(DarDeBaja(txtDni.Text) > 0) { 
-                MessageBox.Show("Medico dado de baja", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Hide();
+            var respuesta = MessageBox.Show("¿Desea dar de baja al medico?", "Dar de baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (respuesta == DialogResult.No) { return; }
+            if (respuesta == DialogResult.Yes)
+            {
+                if (DarDeBaja(txtDni.Text) > 0)
+                {
+                    MessageBox.Show("Medico dado de baja exitosamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Hide();
+                }
             }
         }
 
@@ -43,5 +50,32 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
             }
         }
 
+        private void txtDni_TextChanged(object sender, EventArgs e)
+        {
+            string query = "SELECT CONCAT('Dr. ', m.apellido, ', ', m.nombre), e.nombre FROM medico m " +
+                           "INNER JOIN especialidad e ON e.id = m.id_especialidad WHERE m.dni = @dni AND m.activo = 1;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@dni", txtDni.Text);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    txtMedico.Text = reader.GetString(0);
+                    txtEspecialidad.Text = reader.GetString(1);
+                }
+            }
+        }
+
+        private void txtDni_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtDni.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("El DNI debe ser unicamente compuesto por numeros",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtDni.Focus();
+            } 
+        }
     }
 }

@@ -1,108 +1,114 @@
 ﻿using Final_TallerdeProgramacion_Aguilar_Juarez.modelo;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
 {
     public partial class ModificarMedico : Form
     {
-        private IngresoMedico ingresoMedico;
-
-        public ModificarMedico()
+        private IngresoMedicoAdmin ingresoMedicoAdmin;
+        private HorariosMedicoAdmin horariosMedicoAdmin;
+        public ModificarMedico(IngresoMedicoAdmin ingresoMedicoAdmin)
         {
             InitializeComponent();
+            this.ingresoMedicoAdmin = ingresoMedicoAdmin;
         }
         private void ModificarMedico_Load(object sender, EventArgs e)
         {
             CargarEspecialidad();
+            CargarProvincias();
         }
 
         private void btnVolver_Click(object sender, EventArgs e)
-        {   
+        {
             Hide();
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
-            Medico medico = new Medico(txtApellido.Text, txtNombre.Text,
-                txtDni.Text, cbSexo.Text, pFechaNac.Value, txtTelefono.Text, txtEmail.Text,IdEspecialidad(cbEspecialidad.Text), Convert.ToDecimal(txtPlus.Text));
-            if(Modificar(medico) > 0)
+            Medico medico = new Medico(txtApellido.Text, txtNombre.Text, cbSexo.Text, txtDireccion.Text, IdProvincia(cbProvincia.Text), IdLocalidad(cbLocalidad.Text),
+                 pFechaNac.Value, txtTelefono.Text, txtEmail.Text, IdEspecialidad(cbEspecialidad.Text), Convert.ToDecimal(txtPlus.Text));
+            if (Modificar(medico) > 0)
             {
                 MessageBox.Show("Medico modificado con exito", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnLimpiar_Click(sender, e);
             }
         }
         private void btnVolver_Click_1(object sender, EventArgs e)
         {
-            ingresoMedico = new IngresoMedico();
-            ingresoMedico.Show();
+            ingresoMedicoAdmin.Show();
             Hide();
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            Medico medico = BuscarMedico(txtDni.Text);
+            List<Medico> medico = Buscar(txtDni.Text);
             if (medico == null)
             {
                 MessageBox.Show("Médico no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                txtApellido.Text = medico.Apellido;
-                txtNombre.Text = medico.Nombre;
-                cbSexo.Text = medico.Sexo;
-                pFechaNac.Value = medico.FechaNac;
-                txtTelefono.Text = medico.Telefono;
-                txtEmail.Text = medico.Email;
-                txtPlus.Text = medico.Plus.ToString();
+                txtApellido.Text = medico[0].Apellido;
+                txtNombre.Text = medico[0].Nombre;
+                cbSexo.Text = medico[0].Sexo;
+                pFechaNac.Value = medico[0].FechaNac;
+                txtTelefono.Text = medico[0].Telefono;
+                txtEmail.Text = medico[0].Email;
+                txtPlus.Text = medico[0].Plus.ToString();
+                txtDireccion.Text = medico[0].Direccion;
+                cbProvincia.Text = Provincia(medico[0].IdProvincia);
+                cbLocalidad.Text = Localidad(medico[0].IdLocalidad);
+                cbEspecialidad.Text = Especialidad(medico[0].IdEspecialidad);
             }
         }
 
+        private void btnHorarios_Click(object sender, EventArgs e)
+        {
+            if (txtDni.Text == "")
+            {
+                MessageBox.Show("Ingrese un DNI", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            horariosMedicoAdmin = new HorariosMedicoAdmin(this, txtDni.Text);
+            horariosMedicoAdmin.Show();
+            Hide();
+        }
+        private void cbProvincia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrarLocalidades();
+        }
+        private void lbMedicos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarDatos();
+        }
         private int Modificar(Medico medico)
         {
             using (SqlConnection conn = Conexion.Conectar())
             {
-                string query = "UPDATE medico SET apellido = @apellido, nombre = @nombre, sexo = @sexo," +
-                    " fecha_nac = @fechaNac, telefono = @telefono, email = @email, plus = @plus WHERE dni = @dni;";
+                string query = "UPDATE medico SET apellido = @apellido, nombre = @nombre, sexo = @sexo, direccion = @direccion," +
+                    " id_provincia = @provincia, id_localidad = @localidad, fecha_nac = @fechaNac, telefono = @telefono," +
+                    " email = @email, plus = @plus WHERE dni = @dni;";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@apellido", medico.Apellido);
                 cmd.Parameters.AddWithValue("@nombre", medico.Nombre);
                 cmd.Parameters.AddWithValue("@sexo", medico.Sexo);
+                cmd.Parameters.AddWithValue("@direccion", medico.Direccion);
+                cmd.Parameters.AddWithValue("@provincia", medico.IdProvincia);
+                cmd.Parameters.AddWithValue("@localidad", medico.IdLocalidad);
                 cmd.Parameters.AddWithValue("@fechaNac", medico.FechaNac);
                 cmd.Parameters.AddWithValue("@telefono", medico.Telefono);
                 cmd.Parameters.AddWithValue("@email", medico.Email);
                 cmd.Parameters.AddWithValue("@plus", medico.Plus);
-                cmd.Parameters.AddWithValue("@dni", medico.Dni);
+                cmd.Parameters.AddWithValue("@dni", txtDni.Text);
                 return cmd.ExecuteNonQuery();
             }
         }
 
-        private Medico BuscarMedico(string dni)
-        {
-            string query = "SELECT m.apellido, m.nombre , m.sexo, m.fecha_nac," +
-            " m.telefono, m.email, m.id_especialidad, m.plus FROM medico m INNER JOIN" +
-            " especialidad e ON m.id_Especialidad = e.id WHERE m.dni = @dni";
-            using (SqlConnection conn = Conexion.Conectar())
-            {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@dni", dni);
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    return new Medico(
-                        reader.GetString(0),
-                        reader.GetString(1),
-                        reader.GetString(2),
-                        reader.GetDateTime(3),
-                        reader.GetString(4),
-                        reader.GetString(5),
-                        reader.GetInt32(6),
-                        reader.GetDecimal(7)
-                        );
-                }
-                return null;
-            }
-        }
 
         private void CargarEspecialidad()
         {
@@ -135,6 +141,347 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
                 {
                     return -1;
                 }
+            }
+        }
+
+
+        private List<Medico> Buscar(string dni = "", string apellido = "")
+        {
+            List<Medico> medicos = new List<Medico>();
+            string query = "SELECT m.apellido, m.nombre ,m.dni, m.sexo, m.direccion, m.id_provincia, m.id_localidad, m.fecha_nac," +
+                " m.telefono, m.email, m.id_especialidad, m.plus FROM medico m INNER JOIN especialidad e ON m.id_especialidad = e.id INNER JOIN" +
+                " provincia p ON m.id_provincia = p.id INNER JOIN localidad l ON m.id_localidad = l.id WHERE m.dni = @dni OR m.apellido = @apellido;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@dni", dni);
+                cmd.Parameters.AddWithValue("@apellido", apellido);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Medico medico = new Medico(
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.GetString(4),
+                        reader.GetInt32(5),
+                        reader.GetInt32(6),
+                        reader.GetDateTime(7),
+                        reader.GetString(8),
+                        reader.GetString(9),
+                        reader.GetInt32(10),
+                        reader.GetDecimal(11)
+                    );
+
+                    medicos.Add(medico);
+
+                }
+                return medicos;
+            }
+        }
+
+
+
+        private void CargarProvincias()
+        {
+            string query = "SELECT nombre FROM provincia;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    cbProvincia.Items.Add(reader.GetString(0));
+                }
+            }
+        }
+
+        private void FiltrarLocalidades()
+        {
+            string query = "SELECT l.nombre FROM localidad l INNER JOIN provincia p ON p.id = l.id_provincia WHERE p.nombre = @nombre;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", cbProvincia.Text);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                cbLocalidad.Items.Clear();
+
+                while (reader.Read())
+                {
+                    cbLocalidad.Items.Add(reader.GetString(0));
+                }
+
+            }
+        }
+
+        private int IdProvincia(string nombre)
+        {
+            string query = "SELECT id FROM provincia WHERE nombre = @nombre";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private int IdLocalidad(string nombre)
+        {
+            string query = "SELECT id FROM localidad WHERE nombre = @nombre";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private string Provincia(int id)
+        {
+            string query = "SELECT nombre FROM provincia WHERE id = @id";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        private string Localidad(int id)
+        {
+            string query = "SELECT nombre FROM localidad WHERE id = @id";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+
+        private string Especialidad(int id)
+        {
+            string query = "SELECT nombre FROM especialidad WHERE id = @id";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private void txtApellidoBuscar_TextChanged(object sender, EventArgs e)
+        {
+            CargarListBox();
+        }
+
+        private void CargarDatos()
+        {
+            if (lbMedicos.SelectedItem != null)
+            {
+                string dni = lbMedicos.SelectedItem.ToString().Split('-')[0].Trim();
+                var medicos = Buscar(dni);
+
+                if (medicos.Count > 0)
+                {
+                    Medico medico = medicos[0];
+                    txtApellido.Text = medico.Apellido;
+                    txtNombre.Text = medico.Nombre;
+                    cbSexo.Text = medico.Sexo;
+                    txtDireccion.Text = medico.Direccion;
+                    cbProvincia.Text = Provincia(medico.IdProvincia);
+                    cbLocalidad.Text = Localidad(medico.IdLocalidad);
+                    txtTelefono.Text = medico.Telefono;
+                    txtEmail.Text = medico.Email;
+                    cbEspecialidad.Text = Especialidad(medico.IdEspecialidad);
+                    txtPlus.Text = medico.Plus.ToString();
+                    txtDni.Text = dni;
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró ningún paciente con el DNI proporcionado.");
+                }
+            }
+        }
+
+        private void CargarListBox()
+        {
+            List<Medico> medicos = Buscar("", txtApellidoBuscar.Text);
+            lbMedicos.Items.Clear();
+            if (txtApellidoBuscar.Text != "")
+            {
+                if (medicos == null) MessageBox.Show("Paciente no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                {
+                    foreach (Medico medico in medicos)
+                    {
+                        lbMedicos.Items.Add($"{medico.Dni} - Dr. {medico.Apellido}, {medico.Nombre}");
+                    }
+                }
+            }
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            txtDni.Text = "";
+            txtApellidoBuscar.Text = "";
+            txtApellido.Text = "";
+            txtNombre.Text = "";
+            cbSexo.SelectedIndex = -1;
+            txtDireccion.Text = "";
+            cbProvincia.SelectedIndex = -1;
+            cbLocalidad.SelectedIndex = -1;
+            txtTelefono.Text = "";
+            txtEmail.Text = "";
+            cbEspecialidad.SelectedIndex = -1;
+            txtPlus.Text = "";
+        }
+
+        private void txtDni_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtDni.Text.All(char.IsDigit))
+            {
+
+                MessageBox.Show("El DNI debe ser unicamente compuesto por numeros",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtDni.Focus();
+            }
+        }
+
+        private void txtApellidoBuscar_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtApellidoBuscar.Text.All(char.IsLetter))
+            {
+
+                MessageBox.Show("El apellido debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtApellidoBuscar.Focus();
+            }
+        }
+
+        private void txtApellido_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtApellido.Text.All(char.IsLetter))
+            {
+                MessageBox.Show("El apellido debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtApellido.Focus();
+            }
+        }
+
+        private void txtNombre_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtNombre.Text.All(char.IsLetter))
+            {
+
+                MessageBox.Show("El nombre debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtNombre.Focus();
+            }
+        }
+
+        private void txtTelefono_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+            if (!ValidarTelefonoOpcional(txtTelefono.Text))
+            {
+                e.Cancel = true; // Cancela el evento de validación
+                MessageBox.Show("Número de telefono no válido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtTelefono.Focus();
+            }
+        }
+
+        private void txtEmail_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!ValidarEmailOpcional(txtEmail.Text))
+            {
+                e.Cancel = true; // Cancela el evento de validación
+                MessageBox.Show("Correo electrónico no válido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtEmail.Focus();
+            }
+        }
+
+        public static bool ValidarTelefonoOpcional(string telefono)
+        {
+            if (string.IsNullOrWhiteSpace(telefono)) return true;
+
+            try
+            {
+                string pattern = @"^(?:(?:(?:0?([1-9]\d{0,3}))|([1-9]\d{0,3}))\d{6,8})?$";
+                return Regex.IsMatch(telefono, pattern);
+
+            }
+            catch (ArgumentException ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool ValidarEmailOpcional(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return true;
+            try
+            {
+                string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+                return Regex.IsMatch(email, pattern);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private void txtPlus_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtDni.Text.All(char.IsDigit))
+            {
+                 MessageBox.Show("El campo plus debe ser unicamente compuesto por numeros",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtPlus.Focus();
             }
         }
     }

@@ -1,3 +1,5 @@
+USE hospital_san_telmo;
+
 GO
 	CREATE TRIGGER tgIngresar_pago
 		ON turno

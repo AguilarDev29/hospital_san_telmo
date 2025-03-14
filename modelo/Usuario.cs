@@ -1,6 +1,6 @@
 ﻿namespace Final_TallerdeProgramacion_Aguilar_Juarez.modelo
 {
-    internal class Usuario
+    public class Usuario
     {
         private int id;
         private string username;

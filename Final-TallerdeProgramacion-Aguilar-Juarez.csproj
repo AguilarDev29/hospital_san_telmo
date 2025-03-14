@@ -91,15 +91,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="modelo\Conexion.cs" />
+    <Compile Include="modelo\HorarioMedico.cs" />
     <Compile Include="modelo\Medico.cs" />
     <Compile Include="modelo\Paciente.cs" />
     <Compile Include="modelo\Turno.cs" />
     <Compile Include="modelo\Usuario.cs" />
-    <Compile Include="vista\AgendaTurno.cs">
+    <Compile Include="vista\ConsultaMedico.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="vista\AgendaTurno.Designer.cs">
-      <DependentUpon>AgendaTurno.cs</DependentUpon>
+    <Compile Include="vista\ConsultaMedico.Designer.cs">
+      <DependentUpon>ConsultaMedico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vista\HorariosMedicoAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vista\HorariosMedicoAdmin.Designer.cs">
+      <DependentUpon>HorariosMedicoAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vista\PanelPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vista\PanelPrincipal.Designer.cs">
+      <DependentUpon>PanelPrincipal.cs</DependentUpon>
     </Compile>
     <Compile Include="vista\BajaMedico.cs">
       <SubType>Form</SubType>
@@ -119,11 +132,11 @@
     <Compile Include="vista\Finanzas.Designer.cs">
       <DependentUpon>Finanzas.cs</DependentUpon>
     </Compile>
-    <Compile Include="vista\IngresoMedico.cs">
+    <Compile Include="vista\IngresoMedicoAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="vista\IngresoMedico.Designer.cs">
-      <DependentUpon>IngresoMedico.cs</DependentUpon>
+    <Compile Include="vista\IngresoMedicoAdmin.Designer.cs">
+      <DependentUpon>IngresoMedicoAdmin.cs</DependentUpon>
     </Compile>
     <Compile Include="vista\HistoriaClinica.cs">
       <SubType>Form</SubType>
@@ -131,11 +144,11 @@
     <Compile Include="vista\HistoriaClinica.Designer.cs">
       <DependentUpon>HistoriaClinica.cs</DependentUpon>
     </Compile>
-    <Compile Include="vista\IngresoPaciente.cs">
+    <Compile Include="vista\PacienteUser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="vista\IngresoPaciente.Designer.cs">
-      <DependentUpon>IngresoPaciente.cs</DependentUpon>
+    <Compile Include="vista\PacienteUser.Designer.cs">
+      <DependentUpon>PacienteUser.cs</DependentUpon>
     </Compile>
     <Compile Include="vista\Login.cs">
       <SubType>Form</SubType>
@@ -151,23 +164,17 @@
     <Compile Include="vista\ModificarMedico.Designer.cs">
       <DependentUpon>ModificarMedico.cs</DependentUpon>
     </Compile>
-    <Compile Include="vista\PanelAdmin.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="vista\PanelAdmin.Designer.cs">
-      <DependentUpon>PanelAdmin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="vista\MedicoConsulta.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="vista\MedicoConsulta.Designer.cs">
-      <DependentUpon>MedicoConsulta.cs</DependentUpon>
-    </Compile>
     <Compile Include="vista\ModificarPaciente.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="vista\ModificarPaciente.Designer.cs">
       <DependentUpon>ModificarPaciente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vista\Planillas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vista\Planillas.Designer.cs">
+      <DependentUpon>Planillas.cs</DependentUpon>
     </Compile>
     <Compile Include="vista\ReagendarTurno.cs">
       <SubType>Form</SubType>
@@ -175,8 +182,26 @@
     <Compile Include="vista\ReagendarTurno.Designer.cs">
       <DependentUpon>ReagendarTurno.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="vista\AgendaTurno.resx">
-      <DependentUpon>AgendaTurno.cs</DependentUpon>
+    <Compile Include="vista\TurnoUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vista\TurnoUser.Designer.cs">
+      <DependentUpon>TurnoUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vista\TurnosMedico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vista\TurnosMedico.Designer.cs">
+      <DependentUpon>TurnosMedico.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="vista\ConsultaMedico.resx">
+      <DependentUpon>ConsultaMedico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vista\HorariosMedicoAdmin.resx">
+      <DependentUpon>HorariosMedicoAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vista\PanelPrincipal.resx">
+      <DependentUpon>PanelPrincipal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vista\BajaMedico.resx">
       <DependentUpon>BajaMedico.cs</DependentUpon>
@@ -187,14 +212,14 @@
     <EmbeddedResource Include="vista\Finanzas.resx">
       <DependentUpon>Finanzas.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="vista\IngresoMedico.resx">
-      <DependentUpon>IngresoMedico.cs</DependentUpon>
+    <EmbeddedResource Include="vista\IngresoMedicoAdmin.resx">
+      <DependentUpon>IngresoMedicoAdmin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vista\HistoriaClinica.resx">
       <DependentUpon>HistoriaClinica.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="vista\IngresoPaciente.resx">
-      <DependentUpon>IngresoPaciente.cs</DependentUpon>
+    <EmbeddedResource Include="vista\PacienteUser.resx">
+      <DependentUpon>PacienteUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vista\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
@@ -209,20 +234,23 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="vista\MedicoConsulta.resx">
-      <DependentUpon>MedicoConsulta.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="vista\ModificarMedico.resx">
       <DependentUpon>ModificarMedico.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vista\ModificarPaciente.resx">
       <DependentUpon>ModificarPaciente.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="vista\PanelAdmin.resx">
-      <DependentUpon>PanelAdmin.cs</DependentUpon>
+    <EmbeddedResource Include="vista\Planillas.resx">
+      <DependentUpon>Planillas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vista\ReagendarTurno.resx">
       <DependentUpon>ReagendarTurno.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vista\TurnoUser.resx">
+      <DependentUpon>TurnoUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vista\TurnosMedico.resx">
+      <DependentUpon>TurnosMedico.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -244,6 +272,20 @@
   <ItemGroup>
     <None Include="Resources\Minimalist Hospital and Medical Health Logo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website %284%29.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

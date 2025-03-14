@@ -1,0 +1,542 @@
+﻿using Final_TallerdeProgramacion_Aguilar_Juarez.modelo;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
+{
+    public partial class TurnoUser : Form
+    {
+        private PanelPrincipal panelPrincipal;
+        private ReagendarTurno reagendarTurno;
+        private CancelarTurno cancelarTurno;
+        private bool actualizandoFecha = false;
+        public TurnoUser()
+        {
+            InitializeComponent();
+        }
+        public TurnoUser(PanelPrincipal panelPrincipal)
+        {
+            InitializeComponent();
+            this.panelPrincipal = panelPrincipal;
+        }
+
+        private void TurnoUser_Load(object sender, EventArgs e)
+        {
+            CargarEspecialidad();
+            pFecha.Value = DateTime.Now;
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+
+            if (txtDni.Text == "" && txtApellido.Text == "")
+            {
+                MessageBox.Show("Ingrese un DNI o apellido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            if (!BuscarPaciente())
+            {
+                MessageBox.Show("Paciente no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+        private void cbEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pFecha.Value = DateTime.Now;
+            cbMedico.Text = "";
+            lblMensaje.Visible = false;
+            lbDiasMedico.Visible = false;
+            btnTurnoMasReciente.Visible = false;
+            cbHorario.Text = "";
+            FiltrarMedico();
+        }
+        private void btnAgendar_Click(object sender, EventArgs e)
+        {
+            Turno turno = new Turno(IdPaciente(txtDni.Text), IdMedico(cbMedico.Text), pFecha.Value, IdHorario(cbHorario.Text),
+                Convert.ToDecimal(txtTotal.Text.Substring(1)));
+            Console.WriteLine(turno.IdPaciente);
+            Console.WriteLine(turno.IdMedico);
+            Console.WriteLine(turno.FechaTurno);
+            Console.WriteLine(turno.IdHoraTurno);
+            Console.WriteLine(turno.Total);
+            if (AgendarTurno(turno) > 0)
+            {
+                MessageBox.Show("Turno agendado con exito", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnLimpiar_Click(sender, e);
+            }
+            btnAgendar.Enabled = false;
+        }
+        private void btnCalcular_Click(object sender, EventArgs e)
+        {
+            decimal descuento = PlusMedico() * DescuentoObraSocial();
+            btnAgendar.Enabled = true;
+            txtTotal.Text = "$" + (PlusMedico() - descuento).ToString();
+
+        }
+        private void pFecha_ValueChanged(object sender, EventArgs e)
+        {
+            cbHorario.Items.Clear();
+            if (actualizandoFecha)
+                return;
+
+            cbHorario.SelectedIndex = -1;
+
+            if (pFecha.Value.DayOfWeek == DayOfWeek.Sunday)
+            {
+                MessageBox.Show("No se pueden agendar turnos en domingo", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (DateTime.Compare(pFecha.Value.Date, DateTime.Now.Date) < 0)
+            {
+                MessageBox.Show("No se pueden agendar turnos anteriores a la fecha actual", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            CargarHorariosDisponibles(pFecha.Value, IdMedico(cbMedico.Text));
+        }
+
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            txtPaciente.Clear();
+            txtApellido.Clear();
+            txtDni.Clear();
+            txtObraSocial.Clear();
+            txtTotal.Clear();
+            cbEspecialidad.SelectedIndex = -1;
+            cbMedico.SelectedIndex = -1;
+            cbHorario.Items.Clear();
+            lbDiasMedico.Visible = false;
+            lblMensaje.Visible = false;
+            btnTurnoMasReciente.Visible = false;
+            lbPacientes.Items.Clear();
+            btnAgendar.Enabled = false;
+        }
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            panelPrincipal.Show();
+            Hide();
+        }
+
+        private void CargarEspecialidad()
+        {
+            string query = "SELECT nombre FROM especialidad;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    cbEspecialidad.Items.Add(reader.GetString(0));
+                }
+            }
+        }
+
+        private string FiltrarMedico()
+        {
+            string query = "SELECT CONCAT('Dr. ', m.apellido, ', ', m.nombre) AS medico, m.dni " +
+                           "FROM medico m " +
+                           "INNER JOIN especialidad e ON e.id = m.id_especialidad " +
+                           "WHERE e.nombre = @nombre;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", cbEspecialidad.Text);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                cbMedico.Items.Clear();
+
+                while (reader.Read())
+                {
+                    cbMedico.Items.Add(reader.GetString(0));
+                    return reader.GetString(1);
+                }
+                return null;
+            }
+        }
+
+        private bool BuscarPaciente()
+        {
+            string query = "SELECT CONCAT(p.apellido, ', ', p.nombre) AS paciente, os.nombre FROM paciente p " +
+                           "INNER JOIN obra_social os ON p.id_obra_social = os.id WHERE p.dni = @dni OR p.apellido = @apellido;";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@dni", txtDni.Text);
+                cmd.Parameters.AddWithValue("@apellido", txtApellido.Text);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    txtPaciente.Text = reader.GetString(0);
+                    txtObraSocial.Text = reader.GetString(1);
+                    reader.Close();
+                    return true;
+                }
+                else
+                {
+                    reader.Close();
+                    return false;
+                }
+            }
+        }
+
+        private int AgendarTurno(Turno turno)
+        {
+            string query = "EXECUTE spAgendar_turno @id_paciente, @id_medico, @fecha_turno, @id_horario, @total";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id_paciente", turno.IdPaciente);
+                cmd.Parameters.AddWithValue("@id_medico", turno.IdMedico);
+                cmd.Parameters.AddWithValue("@fecha_turno", turno.FechaTurno);
+                cmd.Parameters.AddWithValue("@id_horario", turno.IdHoraTurno);
+                cmd.Parameters.AddWithValue("@total", turno.Total);
+                return cmd.ExecuteNonQuery();
+            }
+
+
+        }
+
+        private int IdPaciente(string dni)
+        {
+            string query = "SELECT id FROM paciente WHERE dni = @dni";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@dni", dni);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private int IdMedico(string medico)
+        {
+            string query = "SELECT id FROM medico WHERE CONCAT('Dr. ',apellido,', ', nombre) = @medico";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@medico", medico);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private decimal PlusMedico()
+        {
+            string query = "SELECT plus FROM medico WHERE CONCAT('Dr. ',apellido,', ', nombre) = @medico";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@medico", cbMedico.Text);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetDecimal(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private decimal DescuentoObraSocial()
+        {
+            string query = "SELECT descuento FROM obra_social WHERE nombre = @obraSocial";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@obraSocial", txtObraSocial.Text);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetDecimal(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private void CargarHorariosDisponibles(DateTime fecha, int idMedico)
+        {
+            string dia = ObtenerDiaSemana(pFecha.Value);
+
+            string query = "SELECT hc.horario FROM horario_medico hm " +
+                "JOIN horario_clinica hc ON hm.id_horario = hc.id " +
+                "LEFT JOIN turno t ON hm.id = t.id_horario AND t.id_medico = hm.id_medico " +
+                "AND t.fecha_turno = @fecha AND t.cancelado = 'NO' WHERE hm.id_medico = @idMedico " +
+                "AND hm.dia = @dia AND t.id IS NULL ORDER BY hc.horario;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@fecha", fecha.Date);
+                cmd.Parameters.AddWithValue("@idMedico", idMedico);
+                cmd.Parameters.AddWithValue("@dia", dia);
+                SqlDataReader reader = cmd.ExecuteReader();
+                cbHorario.Items.Clear();
+                while (reader.Read())
+                {
+                    TimeSpan horario = reader.GetTimeSpan(0);
+                    cbHorario.Items.Add(horario.ToString(@"hh\:mm"));
+                }
+            }
+        }
+
+
+
+
+        private List<Paciente> Buscar(string dni = "", string apellido = "")
+        {
+            List<Paciente> pacientes = new List<Paciente>();
+            string query = "SELECT p.apellido, p.nombre ,p.dni, p.sexo, p.direccion, p.id_provincia, p.id_localidad, p.fecha_nac," +
+                " p.telefono, p.email, os.id FROM paciente p INNER JOIN obra_social os ON p.id_obra_social = os.id" +
+                " WHERE p.dni = @dni OR p.apellido = @apellido;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@dni", dni);
+                cmd.Parameters.AddWithValue("@apellido", apellido);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Paciente paciente = new Paciente(
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.GetString(4),
+                        reader.GetInt32(5),
+                        reader.GetInt32(6),
+                        reader.GetDateTime(7),
+                        reader.GetString(8),
+                        reader.GetString(9),
+                        reader.GetInt32(10)
+                    );
+
+                    pacientes.Add(paciente);
+
+                }
+                return pacientes;
+            }
+        }
+
+        private void lbPacientes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lbPacientes.SelectedItem != null)
+            {
+                string dni = lbPacientes.SelectedItem.ToString().Split('-')[0].Trim();
+                var pacientes = Buscar(dni);
+
+                if (pacientes.Count > 0)
+                {
+                    Paciente paciente = pacientes[0];
+                    txtDni.Text = paciente.Dni;
+                    txtPaciente.Text = paciente.Apellido + ", " + paciente.Nombre;
+                    txtObraSocial.Text = ObraSocial(paciente.IdObraSocial);
+
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró ningún paciente con el DNI proporcionado.");
+                }
+            }
+        }
+
+        private void txtApellido_TextChanged(object sender, EventArgs e)
+        {
+            List<Paciente> pacientes = Buscar(txtDni.Text, txtApellido.Text);
+            if (txtApellido.Text != "")
+            {
+                foreach (Paciente paciente in pacientes)
+                {
+                    lbPacientes.Items.Add($"{paciente.Dni} - {paciente.Apellido}, {paciente.Nombre}");
+                }
+                lblpaciente.Visible = true;
+            }
+        }
+
+        private string ObraSocial(int idObraSocial)
+        {
+            string query = "SELECT nombre FROM obra_social WHERE id = @idObraSocial;";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@idObraSocial", idObraSocial);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
+        string ObtenerDiaSemana(DateTime fecha)
+        {
+            switch (fecha.DayOfWeek)
+            {
+                case DayOfWeek.Sunday: return "DOMINGO";
+                case DayOfWeek.Monday: return "LUNES";
+                case DayOfWeek.Tuesday: return "MARTES";
+                case DayOfWeek.Wednesday: return "MIERCOLES";
+                case DayOfWeek.Thursday: return "JUEVES";
+                case DayOfWeek.Friday: return "VIERNES";
+                case DayOfWeek.Saturday: return "SABADO";
+                default: return "";
+            }
+        }
+
+        private void cbMedico_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pFecha.Value = DateTime.Now;
+            lblMensaje.Visible = true;
+            lbDiasMedico.Visible = true;
+            btnTurnoMasReciente.Visible = true;
+            cbHorario.Text = "";
+            ObtenerDiasMedico();
+
+        }
+
+        private void ObtenerDiasMedico()
+        {
+            string query = "SELECT dia FROM (SELECT DISTINCT dia FROM horario_medico WHERE id_medico = @idMedico) AS DistinctDias " +
+                           "ORDER BY CASE dia " +
+                           "WHEN 'LUNES' THEN 1 " +
+                           "WHEN 'MARTES' THEN 2 " +
+                           "WHEN 'MIERCOLES' THEN 3 " +
+                           "WHEN 'JUEVES' THEN 4 " +
+                           "WHEN 'VIERNES' THEN 5 " +
+                           "WHEN 'SABADO' THEN 6 " +
+                           "WHEN 'DOMINGO' THEN 7 " +
+                           "END;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@idMedico", IdMedico(cbMedico.Text));
+                SqlDataReader reader = cmd.ExecuteReader();
+                lbDiasMedico.Items.Clear();
+                while (reader.Read())
+                {
+                    lbDiasMedico.Items.Add(reader.GetString(0));
+                }
+            }
+        }
+
+
+        private int IdHorario(string horario)
+        {
+            string query = "SELECT id FROM horario_clinica WHERE horario = @horario";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@horario", horario);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            if (txtDni.Text == "" || txtPaciente.Text == "")
+            {
+                MessageBox.Show("Ingrese un paciente antes de continuar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var respuesta = MessageBox.Show("¿Desea reagendar el turno?", "Reagendar", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (respuesta == DialogResult.Yes)
+            {
+                reagendarTurno = new ReagendarTurno(IdPaciente(txtDni.Text));
+                reagendarTurno.Show();
+            }
+            if (respuesta == DialogResult.No)
+            {
+                cancelarTurno = new CancelarTurno(IdPaciente(txtDni.Text));
+                cancelarTurno.Show();
+            }
+        }
+
+        private void btnTurnoMasReciente_Click(object sender, EventArgs e)
+        {
+            DateTime fecha = DateTime.Today.Date;
+            DateTime fechaLimite = fecha.AddYears(1);
+            actualizandoFecha = true;
+            while (fecha <= fechaLimite)
+            {
+                string diaSemana = ObtenerDiaSemana(fecha);
+                if (lbDiasMedico.Items.Contains(diaSemana))
+                {
+                    CargarHorariosDisponibles(fecha, IdMedico(cbMedico.Text));
+                    if (cbHorario.Items.Count > 0)
+                    {
+                        cbHorario.SelectedIndex = 0;
+                        pFecha.Value = fecha;
+                        actualizandoFecha = false;
+                        return;
+                    }
+                }
+                fecha = fecha.AddDays(1);
+                pFecha.Value = fecha;
+            }
+            actualizandoFecha = false;
+            MessageBox.Show("No hay turnos disponibles en el próximo año", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void txtDni_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtDni.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("El DNI debe ser unicamente compuesto por numeros",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtDni.Focus();
+            }
+        }
+
+        private void txtApellido_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtApellido.Text.All(char.IsLetter))
+            {
+                MessageBox.Show("El apellido debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtApellido.Focus();
+            }
+        }
+    }
+}

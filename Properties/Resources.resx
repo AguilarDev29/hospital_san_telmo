@@ -118,10 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Minimalist Hospital and Medical Health Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Minimalist Hospital and Medical Health Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dark Green and Cream Simple Dark Real Estate Bio-Link Website" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dark Green and Cream Simple Dark Real Estate Bio-Link Website (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Minimalist Hospital and Medical Health Logo (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Minimalist Hospital and Medical Health Logo (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Minimalist Hospital and Medical Health Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Minimalist Hospital and Medical Health Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Dark Green and Cream Simple Dark Real Estate Bio-Link Website (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dark Green and Cream Simple Dark Real Estate Bio-Link Website (3)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website (3).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dark Green and Cream Simple Dark Real Estate Bio-Link Website (4)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dark Green and Cream Simple Dark Real Estate Bio-Link Website (4).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

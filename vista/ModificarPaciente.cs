@@ -1,15 +1,18 @@
 ﻿using Final_TallerdeProgramacion_Aguilar_Juarez.modelo;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
 {
     public partial class ModificarPaciente : Form
     {
-        private IngresoPaciente ingresoPaciente;
+        private PacienteUser ingresoPaciente;
 
-        public ModificarPaciente(IngresoPaciente ingresoPaciente)
+        public ModificarPaciente(PacienteUser ingresoPaciente)
         {
             InitializeComponent();
             this.ingresoPaciente = ingresoPaciente;
@@ -17,6 +20,7 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
         private void ModificarPaciente_Load(object sender, EventArgs e)
         {
             CargarObraSocial();
+            CargarProvincias();
         }
 
         private void btnVolver_Click(object sender, EventArgs e)
@@ -28,36 +32,90 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
         private void btnModificar_Click(object sender, EventArgs e)
         {
             Paciente paciente = new Paciente(txtApellido.Text, txtNombre.Text,
-                txtDni.Text, cbSexo.Text, txtDireccion.Text, txtLocalidad.Text,
+                cbSexo.Text, txtDireccion.Text, IdProvincia(cbProvincia.Text), IdLocalidad(cbLocalidad.Text),
                 pFechaNac.Value, txtTelefono.Text, txtEmail.Text, IdObraSocial(cbObraSocial.Text));
-            if(Modificar(paciente) > 0)
+            if (Modificar(paciente) > 0)
             {
                 MessageBox.Show("Paciente modificado con exito", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnLimpiar_Click(sender, e);
             }
 
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            if (txtDni.Text == "")
+            List<Paciente> pacientes = Buscar(txtDniBuscar.Text);
+
+            if (txtDniBuscar.Text == "")
             {
-                MessageBox.Show("Ingrese un DNI", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ingrese un criterio de busqueda", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Paciente paciente = BuscarPaciente(txtDni.Text);
-            if (paciente == null) MessageBox.Show("Paciente no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else
+
+            if (txtDniBuscar.Text != "")
             {
-                txtApellido.Text = paciente.Apellido;
-                txtNombre.Text = paciente.Nombre;
-                cbSexo.Text = paciente.Sexo;
-                txtDireccion.Text = paciente.Direccion;
-                txtLocalidad.Text = paciente.Localidad;
-                pFechaNac.Value = paciente.FechaNacimiento;
-                txtTelefono.Text = paciente.Telefono;
-                txtEmail.Text = paciente.Email;
-                cbObraSocial.Text = ObraSocial(paciente.IdObraSocial);
+                txtApellidoBuscar.Text = pacientes[0].Apellido;
+                txtApellido.Text = pacientes[0].Apellido;
+                txtNombre.Text = pacientes[0].Nombre;
+                cbSexo.Text = pacientes[0].Sexo;
+                txtDireccion.Text = pacientes[0].Direccion;
+                cbProvincia.Text = Provincia(pacientes[0].IdProvincia);
+                cbLocalidad.Text = Localidad(pacientes[0].IdLocalidad);
+                pFechaNac.Value = pacientes[0].FechaNacimiento;
+                txtTelefono.Text = pacientes[0].Telefono;
+                txtEmail.Text = pacientes[0].Email;
+                cbObraSocial.Text = ObraSocial(pacientes[0].IdObraSocial);
+
             }
+        }
+        private void lbPacientes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (lbPacientes.SelectedItem != null)
+            {
+                string dni = lbPacientes.SelectedItem.ToString().Split('-')[0].Trim();
+                var pacientes = Buscar(dni);
+
+                if (pacientes.Count > 0)
+                {
+                    Paciente paciente = pacientes[0];
+                    txtApellido.Text = paciente.Apellido;
+                    txtNombre.Text = paciente.Nombre;
+                    cbSexo.Text = paciente.Sexo;
+                    txtDireccion.Text = paciente.Direccion;
+                    cbProvincia.Text = Provincia(paciente.IdProvincia);
+                    cbLocalidad.Text = Localidad(paciente.IdLocalidad);
+                    txtTelefono.Text = paciente.Telefono;
+                    txtEmail.Text = paciente.Email;
+                    cbObraSocial.Text = ObraSocial(paciente.IdObraSocial);
+                    txtDniBuscar.Text = dni;
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró ningún paciente con el DNI proporcionado.");
+                }
+            }
+        }
+
+        private void txtApellidoBuscar_TextChanged(object sender, EventArgs e)
+        {
+            List<Paciente> pacientes = Buscar(txtDniBuscar.Text, txtApellidoBuscar.Text);
+            lbPacientes.Items.Clear();
+            if (txtApellidoBuscar.Text != "")
+            {
+                if (pacientes == null) MessageBox.Show("Paciente no encontrado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                {
+                    foreach (Paciente paciente in pacientes)
+                    {
+                        lbPacientes.Items.Add($"{paciente.Dni} - {paciente.Apellido}, {paciente.Nombre}");
+                    }
+                }
+            }
+        }
+        private void cbProvincia_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrarLocalidades();
         }
 
         private int IdObraSocial(string obraSocial)
@@ -76,7 +134,7 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
         private int Modificar(Paciente paciente)
         {
             string query = "UPDATE paciente SET apellido = @apellido, nombre = @nombre, sexo = @sexo," +
-                " direccion = @direccion, localidad = @localidad, fecha_nac = @fechaNacimiento, telefono = @telefono," +
+                " direccion = @direccion, id_provincia = @provincia, id_localidad = @localidad, fecha_nac = @fechaNacimiento, telefono = @telefono," +
                 " email = @email, id_obra_social = @obraSocial WHERE dni = @dni;";
             using (SqlConnection conn = Conexion.Conectar())
             {
@@ -85,43 +143,52 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
                 cmd.Parameters.AddWithValue("@nombre", paciente.Nombre);
                 cmd.Parameters.AddWithValue("@sexo", paciente.Sexo);
                 cmd.Parameters.AddWithValue("@direccion", paciente.Direccion);
-                cmd.Parameters.AddWithValue("@localidad", paciente.Localidad);
+                cmd.Parameters.AddWithValue("@provincia", paciente.IdProvincia);
+                cmd.Parameters.AddWithValue("@localidad", paciente.IdLocalidad);
                 cmd.Parameters.AddWithValue("@fechaNacimiento", paciente.FechaNacimiento);
                 cmd.Parameters.AddWithValue("@telefono", paciente.Telefono);
                 cmd.Parameters.AddWithValue("@email", paciente.Email);
                 cmd.Parameters.AddWithValue("@obraSocial", paciente.IdObraSocial);
-                cmd.Parameters.AddWithValue("@dni", paciente.Dni);
+                cmd.Parameters.AddWithValue("@dni", txtDniBuscar.Text);
                 return cmd.ExecuteNonQuery();
             }
         }
 
-        private Paciente BuscarPaciente(string dni)
+        private List<Paciente> Buscar(string dni = "", string apellido = "")
         {
-            string query = "SELECT p.apellido, p.nombre , p.sexo, p.direccion, p.localidad, p.fecha_nac," +
-                " telefono, email, os.id FROM paciente p INNER JOIN obra_social os ON p.id_obra_social = os.id WHERE p.dni = @dni";
+            List<Paciente> pacientes = new List<Paciente>();
+            string query = "SELECT p.apellido, p.nombre ,p.dni, p.sexo, p.direccion, p.id_provincia, p.id_localidad, p.fecha_nac," +
+                " p.telefono, p.email, os.id FROM paciente p INNER JOIN obra_social os ON p.id_obra_social = os.id" +
+                " WHERE p.dni = @dni OR p.apellido = @apellido;";
 
             using (SqlConnection conn = Conexion.Conectar())
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@dni", dni);
+                cmd.Parameters.AddWithValue("@apellido", apellido);
                 SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                while (reader.Read())
                 {
-                    return new Paciente(
+                    Paciente paciente = new Paciente(
                         reader.GetString(0),
                         reader.GetString(1),
                         reader.GetString(2),
                         reader.GetString(3),
                         reader.GetString(4),
-                        reader.GetDateTime(5),
-                        reader.GetString(6),
-                        reader.GetString(7),
-                        reader.GetInt32(8)
+                        reader.GetInt32(5),
+                        reader.GetInt32(6),
+                        reader.GetDateTime(7),
+                        reader.GetString(8),
+                        reader.GetString(9),
+                        reader.GetInt32(10)
                     );
+
+                    pacientes.Add(paciente);
                 }
-                return null;
             }
+            return pacientes;
         }
+
 
         private void CargarObraSocial()
         {
@@ -150,5 +217,224 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
             }
         }
 
+
+        private int IdProvincia(string nombre)
+        {
+            string query = "SELECT id FROM provincia WHERE nombre = @nombre";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private int IdLocalidad(string nombre)
+        {
+            string query = "SELECT id FROM localidad WHERE nombre = @nombre";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private string Provincia(int id)
+        {
+            string query = "SELECT nombre FROM provincia WHERE id = @id";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        private string Localidad(int id)
+        {
+            string query = "SELECT nombre FROM localidad WHERE id = @id";
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private void CargarProvincias()
+        {
+            string query = "SELECT nombre FROM provincia;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    cbProvincia.Items.Add(reader.GetString(0));
+                }
+            }
+        }
+
+        private void FiltrarLocalidades()
+        {
+            string query = "SELECT l.nombre FROM localidad l INNER JOIN provincia p ON p.id = l.id_provincia WHERE p.nombre = @nombre;";
+
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nombre", cbProvincia.Text);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                cbLocalidad.Items.Clear();
+
+                while (reader.Read())
+                {
+                    cbLocalidad.Items.Add(reader.GetString(0));
+                }
+
+            }
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            txtDniBuscar.Text = "";
+            txtApellidoBuscar.Text = "";
+            txtApellido.Text = "";
+            txtNombre.Text = "";
+            cbSexo.SelectedIndex = -1;
+            txtDireccion.Text = "";
+            cbProvincia.SelectedIndex = -1;
+            cbLocalidad.SelectedIndex = -1;
+            pFechaNac.Value = DateTime.Now;
+            txtTelefono.Text = "";
+            txtEmail.Text = "";
+            cbObraSocial.SelectedIndex = -1;
+            lbPacientes.Items.Clear();
+        }
+
+        private void txtDniBuscar_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtDniBuscar.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("El DNI debe ser unicamente compuesto por numeros",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtDniBuscar.Focus();
+            }
+        }
+
+        private void txtApellidoBuscar_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtApellidoBuscar.Text.All(char.IsLetter))
+            {
+
+                MessageBox.Show("El apellido debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtApellidoBuscar.Focus();
+            }
+        }
+
+        private void txtApellido_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtApellido.Text.All(char.IsLetter))
+            {
+                MessageBox.Show("El apellido debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtApellido.Focus();
+            }
+        }
+
+        private void txtNombre_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!txtNombre.Text.All(char.IsLetter))
+            {
+                MessageBox.Show("El nombre debe ser unicamente compuesto por letras",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtNombre.Focus();
+            }
+        }
+
+        private void txtTelefono_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+            if (!ValidarTelefonoOpcional(txtTelefono.Text))
+            {
+                e.Cancel = true; // Cancela el evento de validación
+                MessageBox.Show("Número de telefono no válido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtTelefono.Focus();
+            }
+        }
+
+        private void txtEmail_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!ValidarEmailOpcional(txtEmail.Text))
+            {
+                e.Cancel = true; // Cancela el evento de validación
+                MessageBox.Show("Correo electrónico no válido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtEmail.Focus();
+            }
+        }
+
+        public static bool ValidarTelefonoOpcional(string telefono)
+        {
+            if (string.IsNullOrWhiteSpace(telefono)) return true;
+
+            try
+            {
+                string pattern = @"^(?:(?:(?:0?([1-9]\d{0,3}))|([1-9]\d{0,3}))\d{6,8})?$";
+                return Regex.IsMatch(telefono, pattern);
+
+            }
+            catch (ArgumentException ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool ValidarEmailOpcional(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return true;
+            try
+            {
+                string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+                return Regex.IsMatch(email, pattern);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

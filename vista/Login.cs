@@ -1,5 +1,4 @@
 ﻿using Final_TallerdeProgramacion_Aguilar_Juarez.modelo;
-using Final_TallerdeProgramacion_Aguilar_Juarez.vista;
 using System;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -13,38 +12,37 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez
         {
             InitializeComponent();
         }
-
-        private void btnsalir1_Click(object sender, EventArgs e)
+        private void btnSalir_Click(object sender, EventArgs e)
         {
-            Dispose();
+            Application.ExitThread();
         }
+
 
         private void btningresar_Click(object sender, EventArgs e)
         {
-            if(txtusuario.Text == "" || txtContrasenia.Text == "")
+            if (txtusuario.Text == "" || txtContrasenia.Text == "")
             {
                 MessageBox.Show("Los campos no pueden estar vacios", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if(!ValidarUsuario(txtusuario.Text, txtContrasenia.Text, this))
+            if (!ValidarUsuario(txtusuario.Text, txtContrasenia.Text, this))
             {
                 intentos++;
-                if(intentos == 3)
+                if (intentos == 3)
                 {
                     MessageBox.Show("Ha superado el número de intentos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     BloquearUsuario(txtusuario.Text);
                     Dispose();
                 }
-            }    
+            }
         }
 
         public static bool ValidarUsuario(string username, string password, Login login)
         {
             Usuario usuario = ObtenerUsuario(username);
-            AgendaTurno agendaConsulta;
-            PanelAdmin panelAdmin;
-            MedicoConsulta medicoConsulta;
+            PanelPrincipal panelPrincipal;
+
 
             if (usuario != null)
             {
@@ -52,23 +50,25 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez
                 {
                     if (usuario.Rol == "USUARIO")
                     {
-                        agendaConsulta = new AgendaTurno();
+                        panelPrincipal = new PanelPrincipal(usuario);
                         login.Hide();
-                        agendaConsulta.Show();
+                        panelPrincipal.Show();
                     }
 
                     if (usuario.Rol == "ADMIN")
                     {
-                        panelAdmin = new PanelAdmin();
+                        panelPrincipal = new PanelPrincipal(usuario);
                         login.Hide();
-                        panelAdmin.Show();
+                        panelPrincipal.Show();
                     }
 
                     if (usuario.Rol == "MEDICO")
                     {
-                        medicoConsulta = new MedicoConsulta(usuario.Username);
+                        panelPrincipal = new PanelPrincipal(usuario);
                         login.Hide();
-                        medicoConsulta.Show();
+                        panelPrincipal.Show();
+
+
                     }
                     return true;
                 }

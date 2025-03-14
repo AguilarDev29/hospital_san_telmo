@@ -1,62 +1,62 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Windows.Forms;
-using ClosedXML.Excel;
 
 namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
 {
     public partial class Finanzas : Form
     {
         private SqlDataAdapter dataAdapter;
-        private System.Data.DataTable dataTable;
-        private PanelAdmin panelAdmin;
-        public Finanzas()
+        private DataTable dataTable;
+        private PanelPrincipal panelPrincipal;
+
+        public Finanzas(PanelPrincipal panelPrincipal)
         {
             InitializeComponent();
+            this.panelPrincipal = panelPrincipal;
         }
 
         private void Finanzas_Load(object sender, EventArgs e)
         {
-            LoadData(pFechaDesde.Value, pFechaHasta.Value);
-
+            cbMedico.SelectedIndex = 0;
+            cbEspecialidad.SelectedIndex = 0;
+            CargarMedico();
+            CargarEspecialidad();
+            FiltrarDatos();
         }
 
-        private void LoadData(DateTime fechaInicio, DateTime fechaFin)
+        private void LoadData(DateTime fechaInicio, DateTime fechaFin, string medico = "", string especialidad = "")
         {
-            string query = "EXECUTE spFiltrar_pagos @fecha_inicio, @fecha_fin;";
-            using (SqlConnection conn = Conexion.Conectar()) 
+            string query = "EXECUTE spFiltrar_pagos @fecha_inicio, @fecha_fin, @medico, @especialidad;";
+            using (SqlConnection conn = Conexion.Conectar())
             {
-                    dataAdapter = new SqlDataAdapter(query, conn);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@fecha_inicio", fechaInicio);
-                    dataAdapter.SelectCommand.Parameters.AddWithValue("@fecha_fin", fechaFin);
-                    dataTable = new System.Data.DataTable();
-                    dataAdapter.Fill(dataTable);
-                    dataGridViewFinanzas.DataSource = dataTable;
-                    dataGridViewFinanzas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dataAdapter = new SqlDataAdapter(query, conn);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@fecha_inicio", fechaInicio);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@fecha_fin", fechaFin);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@medico", string.IsNullOrEmpty(medico) ? (object)DBNull.Value : medico);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@especialidad", string.IsNullOrEmpty(especialidad) ? (object)DBNull.Value : especialidad);
+                dataTable = new DataTable();
+                dataAdapter.Fill(dataTable);
+                dataGridViewFinanzas.DataSource = dataTable;
+                dataGridViewFinanzas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
-                
         }
 
         private void FiltrarDatos()
         {
             DateTime fechaInicio = pFechaDesde.Value;
             DateTime fechaFin = pFechaHasta.Value;
+            string medico = cbMedico.Text;
+            string especialidad = cbEspecialidad.Text;
 
-            if (fechaInicio > fechaFin)
-            {
-                MessageBox.Show("La fecha de inicio no puede ser mayor que la fecha de fin.");
-                return;
-            }
-
-            LoadData(fechaInicio, fechaFin);
+            LoadData(fechaInicio, fechaFin, medico, especialidad);
         }
 
         private void btnVolver_Click(object sender, EventArgs e)
         {
-            panelAdmin = new PanelAdmin();
-            panelAdmin.Show();
+            panelPrincipal.Show();
             Hide();
         }
 
@@ -69,6 +69,17 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
         {
             FiltrarDatos();
         }
+
+        private void cbMedico_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrarDatos();
+        }
+
+        private void cbEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrarDatos();
+        }
+
         private void btnExportarExcel_Click(object sender, EventArgs e)
         {
             ExportarAExcel();
@@ -76,36 +87,37 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
 
         private void ExportarAExcel()
         {
-            // Verificar si el DataGridView tiene datos
             if (dataGridViewFinanzas.Rows.Count == 0)
             {
                 MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Crear un DataTable con los datos del DataGridView
             DataTable dt = new DataTable();
 
-            // Agregar columnas
             foreach (DataGridViewColumn column in dataGridViewFinanzas.Columns)
             {
-                dt.Columns.Add(column.HeaderText);
+                dt.Columns.Add(column.HeaderText, column.ValueType);
             }
 
-            // Agregar filas
             foreach (DataGridViewRow row in dataGridViewFinanzas.Rows)
             {
                 if (!row.IsNewRow)
                 {
-                    dt.Rows.Add(row.Cells.Cast<DataGridViewCell>().Select(cell => cell.Value?.ToString()).ToArray());
+                    DataRow dataRow = dt.NewRow();
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
+                    }
+                    dt.Rows.Add(dataRow);
                 }
             }
 
-            // Guardar el archivo Excel
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "Excel Workbook (*.xlsx)|*.xlsx";
                 saveFileDialog.Title = "Guardar archivo Excel";
+                saveFileDialog.FileName = $"Reporte_Finanzas_{DateTime.Now.ToString("dd-MM-yyyy")}.xlsx";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -129,5 +141,33 @@ namespace Final_TallerdeProgramacion_Aguilar_Juarez.vista
             }
         }
 
+        private void CargarEspecialidad()
+        {
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                string query = "SELECT nombre FROM especialidad;";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    cbEspecialidad.Items.Add(reader.GetString(0));
+                }
+            }
+        }
+
+        private void CargarMedico()
+        {
+            using (SqlConnection conn = Conexion.Conectar())
+            {
+                string query = "SELECT CONCAT('Dr. ', apellido, ', ', nombre) FROM medico WHERE activo = 1;";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    cbMedico.Items.Add(reader.GetString(0));
+                }
+            }
+        }
     }
 }
+
